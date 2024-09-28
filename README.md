@@ -10,16 +10,29 @@ In the project directory, you can run:
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+=======
+1. **Reeshad Khan**  || **rk010@uark.edu** || **Reeshad-Khan**
+2. **Saikiran Somanagoudar** || **shanamanthgoudasoman@hawk.iit.edu** || **saikiransomanagoudar**
+3. **Nischay Rawal** || **nrawal@ku.edu** || **LegendaryPenguin**
+4. **Prisha Sabherwal** || **Psabherwal2@husker.unl.edu** || **Psab2**
+
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
 ### `npm test`
 
+<<<<<<< HEAD
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
+=======
+## What is the name of your App?
+Mind Mentor
+<br /><br />
+## What does your app do?
+*Describe in a paragraph or so*
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -27,7 +40,19 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
+<<<<<<< HEAD
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+=======
+## What challenges are you building for? SELECT ALL THAT APPLY
+*See hackmidwest.com/#prizes for challenge details*
+- [ ]  Pinata Challenge
+- [ ]  Pinata AI Challenge
+- [ ]  Pinata Enterprise Challenge
+- [X]  AWS Bedrock Challenge
+- [ ]  Red Hat | Intel AI Challenge
+- [ ]  Zoom Challenge
+- [ ]  USDA Challenge
+- [ ]  brAIn Rot Challenge
 
 ### `npm run eject`
 
