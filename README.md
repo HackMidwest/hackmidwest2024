@@ -1,16 +1,4 @@
 # Welcome to Hack Midwest 2024!
-<br /><br />
-
-
-## Getting Started
-Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
-1. Clone this repository and rename to the name of your app or idea
-2. Make it **private**
-3. Add pr@kcitp.com as a user
-4. Populate the Team, App & Challenges info below and update as needed
-
-<br /><br />
-
 ## Who's on your team?
 *List the full names,  email address & Github username of your teammates*
 
@@ -21,12 +9,11 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 <br /><br />
 
-
 ## Everyone is John
 Based on the popular [table-top role-playing-game](https://rtwolf.github.io/Everyone-is-John/),
 We created a web-based multiplayed cooperative story-telling game where the rules are simple: everyone is john. Each player takes turns controlling our protagonist, John, in order to complete their hidden objectives using a set of predetermined skills.
 
-The gameplay is relatively straightforward: players select their skills and objectives in private and then join a video call. Each player starts with ten tokens. The players use these tokens to bid for control of John. Then, the AI Game Master sets the scene for our players and the player that bid the most, gets a chance to describe to the Game Master what action they would like John to take.
+The gameplay is relatively straightforward: players select their skills and objectives in private and then join a video call. Each player starts with ten tokens. The players use these tokens to bid for control of John. Then, the AI Game Master sets the scene for our players, and the player that bid the most gets a chance to describe to the Game Master what action they would like John to take.
 
 Think of it like a choose your own adventure game with AI-generated storylines, where the possibilities are endless.
 
