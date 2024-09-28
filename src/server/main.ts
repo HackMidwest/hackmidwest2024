@@ -5,7 +5,8 @@ import cors from 'cors';
 import { CLIENT_ORIGIN, SERVER_PORT } from '../common/config';
 import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
-import { UpdateAppState } from '../common/transitions';
+import { playerJoinLobby, UpdateAppState } from '../common/transitions';
+import { JoinLobbyRequest } from '../common/api';
 
 const app = express();
 const port = SERVER_PORT;
@@ -33,7 +34,10 @@ app.use(
 
 app.use(express.json());
 
-app.post('/api/join', (req, res) => {
+app.post('/api/join', async (req, res) => {
+  const { nickname } = req.body as JoinLobbyRequest;
+  await playerJoinLobby(nickname);
+  console.log(`Player sent join request with nickname "${nickname}".`);
   res.sendStatus(200);
 });
 

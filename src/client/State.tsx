@@ -1,7 +1,9 @@
 import {
   createContext,
+  Dispatch,
   FC,
   PropsWithChildren,
+  SetStateAction,
   useEffect,
   useState,
 } from 'react';
@@ -9,22 +11,32 @@ import { App } from '../common/types';
 import { io } from 'socket.io-client';
 import { SERVER_ORIGIN } from '../common/config';
 
-const initial: App = {
-  kind: 'waitingLobby',
-  players: [],
+type AppState = App & {
+  nickname: string | null;
+  setNickname: Dispatch<SetStateAction<string | null>>;
 };
 
-export const StateContext = createContext<App>(initial);
+const initial: AppState = {
+  kind: 'waitingLobby',
+  players: [],
+  nickname: null,
+  setNickname: () => {},
+};
+
+export const StateContext = createContext<AppState>(initial);
 
 export const StateContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [state, setState] = useState<App>(initial);
+  const [gameState, setGameState] = useState<App>(initial);
+  const [nickname, setNickname] = useState<string | null>(initial.nickname);
 
   useEffect(() => {
     const socket = io(SERVER_ORIGIN);
-    socket.on('message', setState);
+    socket.on('message', setGameState);
   }, []);
 
   return (
-    <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    <StateContext.Provider value={{ ...gameState, nickname, setNickname }}>
+      {children}
+    </StateContext.Provider>
   );
 };

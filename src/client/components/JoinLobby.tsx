@@ -6,12 +6,15 @@ import { flow } from 'effect';
 import { joinLobby } from '../../common/api';
 
 const JoinLobby: FC = () => {
-  const appState = useContext(StateContext);
+  const { setNickname: setAppNickname } = useContext(StateContext);
+  const [disabled, setDisabled] = useState(false);
   const [nickname, setNickname] = useState('');
 
-  const onSubmit: FormEventHandler = e => {
+  const onSubmit: FormEventHandler = async e => {
     e.preventDefault();
-    joinLobby({ nickname });
+    setDisabled(true);
+    await joinLobby({ nickname });
+    setAppNickname(nickname);
   };
 
   return (
@@ -23,7 +26,9 @@ const JoinLobby: FC = () => {
           onChange={flow(getTargetValue, setNickname)}
           placeholder="Nickname"
         />
-        <Button type="submit">Join</Button>
+        <Button type="submit" disabled={disabled}>
+          Join
+        </Button>
       </form>
     </Card>
   );
