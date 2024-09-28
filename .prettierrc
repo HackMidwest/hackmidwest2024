@@ -1,0 +1,6 @@
+{
+  "experimentalTernaries": false,
+  "arrowParens": "avoid",
+  "trailingComma": "all",
+  "singleQuote": true
+}
