@@ -14,11 +14,10 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 ## Who's on your team?
 *List the full names,  email address & Github username of your teammates*
 
-1.   **Full Name**  || **fullname@company.com**  (or fullname@school.edu if you're a CS student) || **Github Username**
-2. 
-3.
-4.
-5.
+1. Landon Nguyen || s887u634@wichita.edu || landonnguyen77
+2. Minh-Tri Bui || k987w933@wichita.edu || nathan2lam
+3. Nathan Lam || k987w933@wichita.edu || nathan2lam
+4. Austin Cho || r273z525@wichita.edu || ACHO080803
 
 <br /><br />
 
