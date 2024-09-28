@@ -1,3 +1,6 @@
+export const getTargetValue = (value: { currentTarget: { value: string } }) =>
+  value.currentTarget.value;
+
 export const shuffleArray = <T>(arr: T[]): T[] => {
   const shuffled = [...arr]; // Copy the array to avoid mutating the original
   for (let i = shuffled.length - 1; i > 0; i--) {
