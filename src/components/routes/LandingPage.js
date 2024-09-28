@@ -28,7 +28,12 @@ const LandingPage = () => {
   };
 
   const handleGetStarted = () => {
-    navigate('/dashboard');
+    if (isSignedIn) {
+      navigate('/dashboard');
+      return;
+    } else {
+      navigate('/login');
+    }
   }
 
   const handleLogin = () => {

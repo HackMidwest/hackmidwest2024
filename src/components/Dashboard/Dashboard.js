@@ -27,8 +27,8 @@ const Dashboard = () => {
   };
 
   // Navigate to Flashcards Page
-  const handleNavigateToFlashcards = () => {
-    navigate('/flashcards');
+  const handleNavigateToGenerate = () => {
+    navigate('/generate');
   };
 
   return (
@@ -97,7 +97,7 @@ const Dashboard = () => {
                   variant="contained"
                   color="secondary"
                   startIcon={<CollectionsIcon />}
-                  onClick={handleNavigateToFlashcards}
+                  onClick={handleNavigateToGenerate}
                   sx={{ mt: 2 }}
                 >
                   Go to Flashcards

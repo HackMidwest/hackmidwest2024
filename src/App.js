@@ -2,8 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Dashboard from './components/Dashboard/Dashboard';
-import Flashcards from './components/Flashcards/Flashcards';
+import Generate from './components/Generate/Generate';
 import LandingPage from './components/routes/LandingPage';
+import SimpleAppBar from './components/SimpleAppBar/SimpleAppBar';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/flashcards" element={<Flashcards />} />
+        <Route path="/generate" element={<Generate />} />
+        <Route path="/simpleappbar" element={<SimpleAppBar />} />
       </Routes>
     </Router>
   );
