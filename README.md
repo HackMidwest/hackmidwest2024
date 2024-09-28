@@ -15,7 +15,7 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 *List the full names,  email address & Github username of your teammates*
 
 1. **Reeshad Khan**  || **rk010@uark.edu** || **Reeshad-Khan**
-2. **Saikiran Somanagoudar** || **shanamanthgoudasoman@hawk.iit.edu** || **Saikiransomanagoudar**
+2. **Saikiran Somanagoudar** || **shanamanthgoudasoman@hawk.iit.edu** || **saikiransomanagoudar**
 3. **Nischay Rawal** || **nrawal@ku.edu** || **LegendaryPenguin**
 4. **Prisha Sabherwal** || **Psabherwal2@husker.unl.edu** || **Psab2**
 
@@ -23,7 +23,7 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 
 ## What is the name of your App?
-
+Mind Mentor
 <br /><br />
 ## What does your app do?
 *Describe in a paragraph or so*
@@ -36,7 +36,7 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 - [ ]  Pinata Challenge
 - [ ]  Pinata AI Challenge
 - [ ]  Pinata Enterprise Challenge
-- [ ]  AWS Bedrock Challenge
+- [X]  AWS Bedrock Challenge
 - [ ]  Red Hat | Intel AI Challenge
 - [ ]  Zoom Challenge
 - [ ]  USDA Challenge
