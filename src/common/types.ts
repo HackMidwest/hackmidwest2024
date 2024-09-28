@@ -7,8 +7,8 @@ export type App =
       kind: 'pickingPeriod';
       players: {
         nickname: string;
-        skills: { one: string | null; two: string | null };
-        obsession: string | null;
+        skills: null | { one: string; two: string };
+        obsession: Obsession | null;
         skillOptions: string[];
         obsessionOptions: Obsession[];
       }[];
@@ -20,7 +20,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        obsession: Obsession;
         bidAmount: null | number;
       }[];
     }
