@@ -10,7 +10,7 @@ export type App =
         skills: { one: string | null; two: string | null };
         obsession: string | null;
         skillOptions: string[];
-        obsessionOptions: string[];
+        obsessionOptions: Obsession[];
       }[];
     }
   | {
@@ -85,3 +85,5 @@ export type InstructionResult = {
     | { kind: 'fallAsleep' }
     | { kind: 'obsessionsCompleted'; playerNicknames: string[] };
 };
+
+export type Obsession = { description: string; rank: number };
