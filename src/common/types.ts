@@ -31,7 +31,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        obsession: Obsession;
         bidAmount: number;
         tieStatus: { kind: 'noTie' } | { kind: 'tie'; roll: null | number };
       }[];
