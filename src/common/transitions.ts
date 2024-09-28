@@ -134,8 +134,29 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
     });
   }
 
-  // TODO a bidder was selected
-  return Promise.resolve(prev);
+  // NOTE this is duped with maybeFinishBidding
+  const newHistory = [
+    ...prev.history,
+    `TODO ${highestBids[0].nickname} won the contest`,
+    `TODO you wake up (get this from ai model)`,
+  ];
+  return Promise.resolve({
+    kind: 'control',
+    history: newHistory,
+    controlPlayer: {
+      nickname: highestBids[0].nickname,
+      willpower: highestBids[0].willpower - highestBids[0].bidAmount!,
+      skills: highestBids[0].skills,
+      obsession: highestBids[0].obsession,
+      instruction: null,
+    },
+    otherPlayers: lowerBids.map(p => ({
+      nickname: p.nickname,
+      willpower: p.willpower,
+      skills: p.skills,
+      obsession: p.obsession,
+    })),
+  });
 };
 
 // a player rolls a die to break the bidding tie
@@ -166,13 +187,57 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
   if (!everyoneDone) return Promise.resolve(prev);
 
   const hadTieRoll = prev.players.filter(p => p.tieStatus.kind === 'tie');
-  const winner = hadTieRoll.reduce((prev, curr) =>
-    (curr.tieStatus as { kind: 'tie'; roll: number }).roll >
-    (prev.tieStatus as { kind: 'tie'; roll: number }).roll
-      ? curr
-      : prev,
+  const highestTieRoll = hadTieRoll.reduce(
+    (max, p) =>
+      Math.max(max, (p.tieStatus as { kind: 'tie'; roll: number }).roll),
+    0,
+  );
+  const winners = prev.players.filter(
+    p => p.tieStatus.kind === 'tie' && p.tieStatus.roll === highestTieRoll,
+  );
+  const nonWinners = prev.players.filter(
+    p => p.tieStatus.kind === 'noTie' || p.tieStatus.roll !== highestTieRoll,
   );
 
-  // TODO move to control, a bidder was selected
-  return Promise.resolve(prev);
+  if (winners.length > 1) {
+    const newPlayers = [
+      ...winners.map(p => ({
+        ...p,
+        tieStatus: { kind: 'tie' as const, roll: null },
+      })),
+      ...nonWinners.map(p => ({
+        ...p,
+        tieStatus: { kind: 'noTie' as const },
+      })),
+    ];
+
+    return Promise.resolve({
+      ...prev,
+      players: newPlayers,
+    });
+  }
+
+  // NOTE this is duped with maybeFinishBidding
+  const newHistory = [
+    ...prev.history,
+    `TODO ${winners[0].nickname} won the contest`,
+    `TODO you wake up (get this from ai model)`,
+  ];
+  return Promise.resolve({
+    kind: 'control',
+    history: newHistory,
+    controlPlayer: {
+      nickname: winners[0].nickname,
+      willpower: winners[0].willpower - winners[0].bidAmount,
+      skills: winners[0].skills,
+      obsession: winners[0].obsession,
+      instruction: null,
+    },
+    otherPlayers: nonWinners.map(p => ({
+      nickname: p.nickname,
+      willpower: p.willpower,
+      skills: p.skills,
+      obsession: p.obsession,
+    })),
+  });
 };
