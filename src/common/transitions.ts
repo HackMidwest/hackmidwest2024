@@ -78,3 +78,19 @@ export const maybeFinishPicking = (): UpdateAppState => prev => {
       })
     : Promise.resolve(prev);
 };
+
+// a player decides their bid
+export const playerBid =
+  (nickname: string, bidAmt: number): UpdateAppState =>
+  prev => {
+    if (prev.kind !== 'bidding') return Promise.resolve(prev);
+
+    return Promise.resolve({
+      ...prev,
+      players: updateElementInArray(
+        prev.players,
+        p => ({ ...p, bidAmount: bidAmt }),
+        p => p.nickname === 'nickname',
+      ),
+    });
+  };
