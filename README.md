@@ -15,19 +15,20 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 *List the full names,  email address & Github username of your teammates*
 
 1.   **Full Name**  || **fullname@company.com**  (or fullname@school.edu if you're a CS student) || **Github Username**
-2. 
-3.
-4.
+2.  Hema Santhoshi Akula || hxa40180@ucmo.edu || akulahemasanthoshidaughterofmurty
+3.  Sowmya Doneti || sxd40850@ucmo.edu ||  sowmyadoneti
+4.  Rajasekhar Reddy Kothapalli || rxk40660@ucmo.edu || KOTHAPALLIRAJASEKHARREDDY
 5.
 
 <br /><br />
 
 
 ## What is the name of your App?
-
+KnowYourPrice
 <br /><br />
 ## What does your app do?
 *Describe in a paragraph or so*
+Our App makes comparison between products from different sources and suggests you the best price for a product
 
 <br /><br />
 
