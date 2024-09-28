@@ -34,14 +34,12 @@ app.use(
 app.use(express.json());
 
 app.post('/api/join', (req, res) => {
-  console.log(req.body);
   res.sendStatus(200);
 });
 
 io.on('connection', socket => {
   console.log(`Socket with id ${socket.id} has connected.`);
-  // TODO: Send actual app state
-  socket.send({ kind: 'waitingLobby', players: [] });
+  socket.send(state);
 
   socket.on('disconnect', () => {
     console.log(`Socket with id ${socket.id} has disconnected.`);
