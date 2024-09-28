@@ -1,6 +1,6 @@
 import { pipe } from 'effect';
 import { obsessions, skills } from './constants';
-import { App, Obsession } from './types';
+import { App, InstructionResult, Obsession } from './types';
 import { shuffleArray, splitIntoChunks, updateElementInArray } from './utils';
 
 export type UpdateAppState = (prev: App) => Promise<App>;
@@ -241,3 +241,64 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
     })),
   });
 };
+
+export const userIssuesControlInstruction =
+  (instruction: string): UpdateAppState =>
+  prev => {
+    if (prev.kind !== 'control') return Promise.resolve(prev);
+
+    // TODO get a response from the ai
+    // based on user data and existing history
+    const result = null as unknown as InstructionResult;
+
+    if (result.result.kind === 'okayNext') {
+      return Promise.resolve({
+        ...prev,
+        history: [...prev.history, result.description],
+      });
+    }
+
+    if (result.result.kind === 'fallAsleep') {
+      return Promise.resolve({
+        kind: 'bidding',
+        history: [...prev.history, result.description],
+        players: [
+          ...prev.otherPlayers.map(p => ({
+            nickname: p.nickname,
+            willpower: p.willpower,
+            skills: p.skills,
+            obsession: p.obsession,
+            bidAmount: null,
+          })),
+          {
+            nickname: prev.controlPlayer.nickname,
+            willpower: prev.controlPlayer.willpower,
+            skills: prev.controlPlayer.skills,
+            obsession: prev.controlPlayer.obsession,
+            bidAmount: null,
+          },
+        ],
+      });
+    }
+
+    if (
+      result.result.kind === 'skillCheck' ||
+      result.result.kind === 'skillCheckWithAdvantage'
+    ) {
+      return Promise.resolve({
+        kind: 'skillCheck',
+        history: [...prev.history, result.description],
+        advantage: result.result.kind === 'skillCheckWithAdvantage',
+        controlPlayer: {
+          ...prev.controlPlayer,
+          willpowerAdded: 0,
+          rollResult: null,
+        },
+        otherPlayers: [...prev.otherPlayers],
+      });
+    }
+
+    if (result.result.kind === 'obsessionsCompleted') {
+      // TODO
+    }
+  };

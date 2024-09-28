@@ -61,7 +61,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        obsession: Obsession;
         willpowerAdded: number;
         rollResult: null | number;
       };
@@ -69,7 +69,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        obsession: Obsession;
       }[];
     }
   | {
