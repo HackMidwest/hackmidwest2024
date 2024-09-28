@@ -14,11 +14,10 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 ## Who's on your team?
 *List the full names,  email address & Github username of your teammates*
 
-1.   **Full Name**  || **fullname@company.com**  (or fullname@school.edu if you're a CS student) || **Github Username**
-2. 
-3.
-4.
-5.
+1.   Landry Geiger  || lgeiger5@unl.edu || landrygeiger
+2.   John Post      || jpost12@unl.edu  || johnmpost
+3.   Zach Wallenburg || zwallenburg2@unl.edu || ZWally
+4.   Roy Dumblauskas || rdumblauskas2@unl.edu || royzerblade
 
 <br /><br />
 
@@ -35,11 +34,11 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 ## What challenges are you building for? SELECT ALL THAT APPLY
 *See hackmidwest.com/#prizes for challenge details*
 - [ ]  Pinata Challenge
-- [ ]  Pinata AI Challenge
+- [X]  Pinata AI Challenge
 - [ ]  Pinata Enterprise Challenge
-- [ ]  AWS Bedrock Challenge
+- [X]  AWS Bedrock Challenge
 - [ ]  Red Hat | Intel AI Challenge
-- [ ]  Zoom Challenge
+- [X]  Zoom Challenge
 - [ ]  USDA Challenge
 - [ ]  brAIn Rot Challenge
 
