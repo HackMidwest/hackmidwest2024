@@ -1,16 +1,16 @@
 import express from 'express';
 import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
-import { SetAppState } from '../common/transitions';
+import { UpdateAppState } from '../common/transitions';
 
 const app = express();
 const port = 4000;
 
 let state: App = { kind: 'waitingLobby', players: [] };
 const stateMutex = new Mutex();
-const setState: SetAppState = async (getNewState: (prev: App) => App) => {
+const setState = async (getNewState: UpdateAppState) => {
   const release = await stateMutex.acquire();
-  state = getNewState(state);
+  state = await getNewState(state);
   release();
 };
 
