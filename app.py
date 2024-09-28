@@ -1,11 +1,30 @@
-import os
-import requests
+import os, requests, zipfile
 from flask import Flask, url_for, jsonify
+
+try:
+    from torch.utils.model_zoo import _download_url_to_file
+except ImportError:
+    try:
+        from torch.hub import download_url_to_file as _download_url_to_file
+    except ImportError:
+        from torch.hub import _download_url_to_file
 
 app = Flask(__name__)
 
 # Ensure the 'assets' folder exists
-os.makedirs('static/assets', exist_ok=True)
+os.makedirs('static/assets/images', exist_ok=True)
+
+def unzip(source_filename, dest_dir):
+    with zipfile.ZipFile(source_filename) as zf:
+        zf.extractall(path=dest_dir)
+    if os.path.exists(source_filename):
+        os.remove(source_filename)
+
+if not os.path.exists('static/assets/saved_models'):    
+    _download_url_to_file('https://www.dropbox.com/s/lrvwfehqdcxoza8/saved_models.zip?dl=1', 'saved_models.zip', None, True)
+    unzip('saved_models.zip', 'static/assets')
+else:
+    print("Skipping download and extraction.")
 
 # deployed_model_name = "fraud"
 # rest_url = "http://modelmesh-serving.redhat:8008"
@@ -18,7 +37,7 @@ os.makedirs('static/assets', exist_ok=True)
 @app.route('/')
 def hello():
     # The default image to show (the already downloaded image)
-    image_url = url_for('static', filename='assets/downloaded_image.jpg')
+    image_url = url_for('static', filename='assets/images/downloaded_image.jpg')
     return f"""
         <html>
             <body>
@@ -42,7 +61,7 @@ def hello():
 @app.route('/fetch-image')
 def fetch_image():
     image_url = 'https://patchcollection.com/cdn/shop/products/Kansas-Jayhawks-Medium-Primary-Logo.jpg?v=1689435890&width=1920'  # Replace with the actual image URL
-    local_filename = os.path.join('static', 'assets', 'downloaded_image.jpg')
+    local_filename = os.path.join('static', 'assets', 'images', 'downloaded_image.jpg')
 
     # Download the image from the URL
     response = requests.get(image_url, stream=True)
@@ -53,7 +72,7 @@ def fetch_image():
                 f.write(chunk)
 
     # Return the new image URL as JSON (used by AJAX to update the image)
-    new_image_url = url_for('static', filename='assets/downloaded_image.jpg')
+    new_image_url = url_for('static', filename='assets/images/downloaded_image.jpg')
     return jsonify(image_url=new_image_url)
 
 # @app.route('/')
