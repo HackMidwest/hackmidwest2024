@@ -1,10 +1,10 @@
-import JoinLobby from './components/JoinLobby';
+import Router from './components/Router';
 import { StateContextProvider } from './State';
 
 export const App = () => {
   return (
     <StateContextProvider>
-      <JoinLobby />
+      <Router />
     </StateContextProvider>
   );
 };

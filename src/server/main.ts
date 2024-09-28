@@ -23,6 +23,7 @@ const stateMutex = new Mutex();
 const setState = async (getNewState: UpdateAppState) => {
   const release = await stateMutex.acquire();
   state = await getNewState(state);
+  io.emit('message', state);
   release();
 };
 
@@ -36,7 +37,7 @@ app.use(express.json());
 
 app.post('/api/join', async (req, res) => {
   const { nickname } = req.body as JoinLobbyRequest;
-  await playerJoinLobby(nickname);
+  await setState(playerJoinLobby(nickname));
   console.log(`Player sent join request with nickname "${nickname}".`);
   res.sendStatus(200);
 });

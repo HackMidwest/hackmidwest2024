@@ -30,8 +30,7 @@ export const StateContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [nickname, setNickname] = useState<string | null>(initial.nickname);
 
   useEffect(() => {
-    const socket = io(SERVER_ORIGIN);
-    socket.on('message', setGameState);
+    io(SERVER_ORIGIN).on('message', setGameState);
   }, []);
 
   return (
