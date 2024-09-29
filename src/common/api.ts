@@ -20,4 +20,6 @@ export type JoinLobbyRequest = {
 export const joinLobby = (body: JoinLobbyRequest) =>
   post(makeUrl('/api/join'), body);
 
+export const startGame = () => post(makeUrl('/api/start'), {});
+
 export const fetchZoomJwt = () => get(makeUrl('/api/zoom-jwt'));

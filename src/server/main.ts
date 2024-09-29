@@ -5,7 +5,11 @@ import cors from 'cors';
 import { CLIENT_ORIGIN, SERVER_PORT } from '../common/config';
 import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
-import { playerJoinLobby, UpdateAppState } from '../common/transitions';
+import {
+  playerJoinLobby,
+  UpdateAppState,
+  waitingToPicking,
+} from '../common/transitions';
 import { JoinLobbyRequest } from '../common/api';
 import { getJWT } from './zoom';
 
@@ -40,6 +44,12 @@ app.post('/api/join', async (req, res) => {
   const { nickname } = req.body as JoinLobbyRequest;
   await setState(playerJoinLobby(nickname));
   console.log(`Player sent join request with nickname "${nickname}".`);
+  res.sendStatus(200);
+});
+
+app.post('/api/start', async (_, res) => {
+  await setState(waitingToPicking());
+  console.log('Starting game.');
   res.sendStatus(200);
 });
 
