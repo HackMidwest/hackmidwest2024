@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Ensure the 'assets' folder exists
 os.makedirs('static/assets/images', exist_ok=True)
 
-model_names = ["candy", "mosaic", "rain_princess", "udnie"]
+model_names = ["candy", "mosaic", "udnie"]
 img_path = 'assets/images/photo.jpg'
 output_image_path = 'static/assets/images/edited_photo.jpg'
 

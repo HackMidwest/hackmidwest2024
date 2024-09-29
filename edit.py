@@ -28,7 +28,7 @@ def stylize_onnx(model, content_image):
     """
     Read ONNX model and run it using onnxruntime
     """
-    if model not in ["candy", "mosaic", "rain_princess", "udnie"]:
+    if model not in ["candy", "mosaic", "udnie"]:
         raise ValueError(f"Invalid model type: {model}")
 
     def to_numpy(tensor):
@@ -46,7 +46,7 @@ def stylize_onnx(model, content_image):
 def rest_request(model: str, data):
     import requests
 
-    if model not in ["candy", "mosaic", "rain_princess", "udnie"]:
+    if model not in ["candy", "mosaic", "udnie"]:
         return None
     else:
         rest_url = "http://modelmesh-serving.brightness:8008"

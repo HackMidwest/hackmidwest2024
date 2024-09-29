@@ -24,7 +24,7 @@ def model_setup():
     if not os.path.exists(local_models_directory):    
         _download_url_to_file('https://www.dropbox.com/s/lrvwfehqdcxoza8/saved_models.zip?dl=1', 'saved_models.zip', None, True)
         unzip('saved_models.zip', 'static/assets')
-        model_names = ["candy", "mosaic", "rain_princess", "udnie"]
+        model_names = ["candy", "mosaic", "udnie"]
         for model in model_names:
             convert_to_onnx(str(model))
     else:
@@ -74,7 +74,7 @@ def convert_to_onnx(m_name: str):
     import onnxruntime as rt
     from model.transformer_net import TransformerNet
 
-    input = torch.randn(1, 3, 224, 224)
+    input = torch.randn(1, 3, 360, 360)
     with torch.no_grad():
         model = TransformerNet()
         model_dict = torch.load(f"/projects/hackmidwest2024/static/assets/saved_models/{m_name}.pth")
