@@ -7,6 +7,7 @@ import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
 import { playerJoinLobby, UpdateAppState } from '../common/transitions';
 import { JoinLobbyRequest } from '../common/api';
+import { getJWT } from './zoom';
 
 const app = express();
 const port = SERVER_PORT;
@@ -40,6 +41,10 @@ app.post('/api/join', async (req, res) => {
   await setState(playerJoinLobby(nickname));
   console.log(`Player sent join request with nickname "${nickname}".`);
   res.sendStatus(200);
+});
+
+app.get('/api/zoom-jwt', async (_, res) => {
+  res.send({ jwt: await getJWT() });
 });
 
 io.on('connection', socket => {
