@@ -14,8 +14,8 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 ## Who's on your team?
 *List the full names,  email address & Github username of your teammates*
 
-1.   **Full Name**  || **fullname@company.com**  (or fullname@school.edu if you're a CS student) || **Github Username**
-2. 
+1.   **Alex Manley** || amanley97@ku.edu || amanley97
+2.   **Muhammad Momin Rahman** || momin.rahman@ku.edu || momin.rahman
 3.
 4.
 5.
@@ -24,10 +24,10 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 
 ## What is the name of your App?
-
+PixelForge
 <br /><br />
 ## What does your app do?
-*Describe in a paragraph or so*
+PixelForge is a cutting-edge prototype that enables on-the-go image editing powered by AI/ML models. It utilizes an ESP32 camera, which is remotely linked to Dropbox via an API, automatically storing each captured image. OpenShiftAI then retrieves the image data from Dropbox using an access token. From there, users can seamlessly apply one of three available stylization models to transform their images.
 
 <br /><br />
 
@@ -38,7 +38,7 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 - [ ]  Pinata AI Challenge
 - [ ]  Pinata Enterprise Challenge
 - [ ]  AWS Bedrock Challenge
-- [ ]  Red Hat | Intel AI Challenge
+- [X]  Red Hat | Intel AI Challenge
 - [ ]  Zoom Challenge
 - [ ]  USDA Challenge
 - [ ]  brAIn Rot Challenge
