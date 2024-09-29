@@ -1,49 +1,63 @@
-import os, requests, zipfile
+import os, requests
 from flask import Flask, url_for, jsonify
-
-try:
-    from torch.utils.model_zoo import _download_url_to_file
-except ImportError:
-    try:
-        from torch.hub import download_url_to_file as _download_url_to_file
-    except ImportError:
-        from torch.hub import _download_url_to_file
+from dropbox_fetch import download_image_from_dropbox
 
 app = Flask(__name__)
-
 # Ensure the 'assets' folder exists
 os.makedirs('static/assets/images', exist_ok=True)
-
-def unzip(source_filename, dest_dir):
-    with zipfile.ZipFile(source_filename) as zf:
-        zf.extractall(path=dest_dir)
-    if os.path.exists(source_filename):
-        os.remove(source_filename)
-
-if not os.path.exists('static/assets/saved_models'):    
-    _download_url_to_file('https://www.dropbox.com/s/lrvwfehqdcxoza8/saved_models.zip?dl=1', 'saved_models.zip', None, True)
-    unzip('saved_models.zip', 'static/assets')
-else:
-    print("Skipping download and extraction.")
 
 # deployed_model_name = "fraud"
 # rest_url = "http://modelmesh-serving.redhat:8008"
 # infer_url = f"{rest_url}/v2/models/{deployed_model_name}/infer"
 
-# import pickle
-# with open('artifact/scaler.pkl', 'rb') as handle:
-#     scaler = pickle.load(handle)
-
 @app.route('/')
-def hello():
+def landing_page():
     # The default image to show (the already downloaded image)
-    image_url = url_for('static', filename='assets/images/downloaded_image.jpg')
+    image_url = url_for('static', filename='assets/images/esp32cam_image.jpg')
     return f"""
-        <html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>PixelForge: AI-Assisted Photo Editing</title>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        text-align: center;
+                        margin: 0;
+                        padding: 20px;
+                    }}
+                    h1 {{
+                        color: #ff5722;
+                    }}
+                    img {{
+                        max-width: 50%;
+                        height: auto;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        margin-bottom: 20px;
+                        border-radius: 8px;
+                    }}
+                    button {{
+                        background-color: #ff5722;
+                        color: white;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 4px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                    }}
+                    button:hover {{
+                        background-color: #e64a19;
+                    }}
+                </style>
+            </head>
             <body>
-                <h1>Hello World!</h1>
-                <img id="image" src="{image_url}" alt="Downloaded Image" width="500" height="auto">
-                <br><br>
+                <h1>PixelForge: AI-Assisted Photo Editing on the Go!</h1>
+                <img id="image" src="{image_url}" alt="Downloaded Image">
+                <br>
                 <button onclick="refreshImage()">Refresh Image</button>
                 <script>
                     function refreshImage() {{
@@ -51,7 +65,8 @@ def hello():
                             .then(response => response.json())
                             .then(data => {{
                                 document.getElementById('image').src = data.image_url + '?v=' + new Date().getTime();
-                            }});
+                            }})
+                            .catch(error => console.error('Error refreshing image:', error));
                     }}
                 </script>
             </body>
@@ -60,19 +75,8 @@ def hello():
 
 @app.route('/fetch-image')
 def fetch_image():
-    image_url = 'https://patchcollection.com/cdn/shop/products/Kansas-Jayhawks-Medium-Primary-Logo.jpg?v=1689435890&width=1920'  # Replace with the actual image URL
-    local_filename = os.path.join('static', 'assets', 'images', 'downloaded_image.jpg')
-
-    # Download the image from the URL
-    response = requests.get(image_url, stream=True)
-    if response.status_code == 200:
-        # Save the image to the 'assets' folder
-        with open(local_filename, 'wb') as f:
-            for chunk in response.iter_content(1024):
-                f.write(chunk)
-
-    # Return the new image URL as JSON (used by AJAX to update the image)
-    new_image_url = url_for('static', filename='assets/images/downloaded_image.jpg')
+    download_image_from_dropbox()
+    new_image_url = url_for('static', filename='assets/images/esp32cam_image.jpg')
     return jsonify(image_url=new_image_url)
 
 # @app.route('/')
@@ -124,4 +128,5 @@ if __name__ == '__main__':
     port = os.environ.get('FLASK_PORT') or 8080
     port = int(port)
 
-    app.run(port=port,host='0.0.0.0')
+    # Start the Flask app
+    app.run(port=port, host='0.0.0.0')
