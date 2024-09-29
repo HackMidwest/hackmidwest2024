@@ -1,3 +1,5 @@
+import { App } from './types';
+
 export const getTargetValue = (value: { currentTarget: { value: string } }) =>
   value.currentTarget.value;
 
@@ -29,3 +31,26 @@ export const splitIntoChunks =
 
     return chunks;
   };
+
+export function updateElementInArray<T>(
+  array: T[],
+  updater: (element: T) => T,
+  predicate: (element: T) => boolean,
+): T[] {
+  return array.map(element => {
+    // Check if the current element matches the predicate
+    if (predicate(element)) {
+      // Update the element using the updater function if it matches
+      return updater(element);
+    }
+    // Return the original element if it doesn't match
+    return element;
+  });
+}
+
+export const getPlayers = (state: App) =>
+  'players' in state
+    ? state.players
+    : 'controlPlayer' in state && 'otherPlayers' in state
+      ? [state.controlPlayer, ...state.otherPlayers]
+      : [];
