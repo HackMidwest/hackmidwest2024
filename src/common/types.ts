@@ -20,6 +20,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
         bidAmount: null | number;
       }[];
@@ -31,6 +32,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
         bidAmount: number;
         tieStatus: { kind: 'noTie' } | { kind: 'tie'; roll: null | number };
@@ -43,13 +45,14 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
-        instruction: null | string;
       };
       otherPlayers: {
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
       }[];
     }
@@ -61,6 +64,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
         willpowerAdded: number;
         rollResult: null | number;
@@ -69,6 +73,7 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
+        points: number;
         obsession: Obsession;
       }[];
     }

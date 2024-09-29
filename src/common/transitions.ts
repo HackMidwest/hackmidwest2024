@@ -72,6 +72,7 @@ export const maybeFinishPicking = (): UpdateAppState => prev => {
           nickname: p.nickname,
           willpower: 10,
           skills: p.skills!,
+          points: 0,
           obsession: p.obsession!,
           bidAmount: null,
         })),
@@ -147,6 +148,7 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
       nickname: highestBids[0].nickname,
       willpower: highestBids[0].willpower - highestBids[0].bidAmount!,
       skills: highestBids[0].skills,
+      points: highestBids[0].points,
       obsession: highestBids[0].obsession,
       instruction: null,
     },
@@ -154,6 +156,7 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
       nickname: p.nickname,
       willpower: p.willpower,
       skills: p.skills,
+      points: p.points,
       obsession: p.obsession,
     })),
   });
@@ -230,6 +233,7 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
       nickname: winners[0].nickname,
       willpower: winners[0].willpower - winners[0].bidAmount,
       skills: winners[0].skills,
+      points: winners[0].points,
       obsession: winners[0].obsession,
       instruction: null,
     },
@@ -237,6 +241,7 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
       nickname: p.nickname,
       willpower: p.willpower,
       skills: p.skills,
+      points: p.points,
       obsession: p.obsession,
     })),
   });
@@ -267,6 +272,7 @@ export const userIssuesControlInstruction =
             nickname: p.nickname,
             willpower: p.willpower,
             skills: p.skills,
+            points: p.points,
             obsession: p.obsession,
             bidAmount: null,
           })),
@@ -274,6 +280,7 @@ export const userIssuesControlInstruction =
             nickname: prev.controlPlayer.nickname,
             willpower: prev.controlPlayer.willpower,
             skills: prev.controlPlayer.skills,
+            points: prev.controlPlayer.points,
             obsession: prev.controlPlayer.obsession,
             bidAmount: null,
           },
@@ -299,6 +306,39 @@ export const userIssuesControlInstruction =
     }
 
     if (result.result.kind === 'obsessionsCompleted') {
-      // TODO
+      const playersCompletedObsessions = result.result.playerNicknames;
+      const newOtherPlayers = prev.otherPlayers.map(p => ({
+        ...p,
+        points:
+          p.points +
+          (playersCompletedObsessions.includes(p.nickname)
+            ? p.obsession.rank
+            : 0),
+      }));
+
+      if (playersCompletedObsessions.includes(prev.controlPlayer.nickname)) {
+        return Promise.resolve({
+          kind: 'bidding',
+          history: [...prev.history, result.description],
+          players: [
+            ...newOtherPlayers.map(p => ({ ...p, bidAmount: null })),
+            {
+              ...prev.controlPlayer,
+              points:
+                prev.controlPlayer.points + prev.controlPlayer.obsession.rank,
+              bidAmount: null,
+            },
+          ],
+        });
+      }
+
+      return Promise.resolve({
+        kind: 'control',
+        history: [...prev.history, result.description],
+        otherPlayers: newOtherPlayers,
+        controlPlayer: { ...prev.controlPlayer, instruction: null },
+      });
     }
+
+    throw 'this should never happen';
   };
