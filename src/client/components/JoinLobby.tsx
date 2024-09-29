@@ -4,9 +4,10 @@ import { Button, Card, Input, Typography } from '@mui/joy';
 import { getTargetValue } from '../../common/utils';
 import { flow } from 'effect';
 import { joinLobby } from '../../common/api';
+import { joinSession } from '../zoom';
 
 const JoinLobby: FC = () => {
-  const { setNickname: setAppNickname } = useContext(StateContext);
+  const { setNickname: setAppNickname, zoomJwt } = useContext(StateContext);
   const [disabled, setDisabled] = useState(false);
   const [nickname, setNickname] = useState('');
 
@@ -14,6 +15,8 @@ const JoinLobby: FC = () => {
     e.preventDefault();
     setDisabled(true);
     await joinLobby({ nickname });
+    // zoom jwt could be null if it's not fetched yet, but don't really want to handle
+    await joinSession(nickname, zoomJwt ?? '');
     setAppNickname(nickname);
   };
 
