@@ -22,7 +22,6 @@ const Router: FC = () => {
           alignItems: 'center',
         }}
       >
-        <BreakTie />
         {match(appState)
           .with(
             {
@@ -43,6 +42,7 @@ const Router: FC = () => {
           .with({ kind: 'pickingPeriod' }, pickingState => (
             <Picking pickingState={pickingState} />
           ))
+          .with({ kind: 'biddingTie' }, () => <BreakTie />)
           .otherwise(appState => (
             <Typography level="body-md">{appState.kind}</Typography>
           ))}

@@ -1,4 +1,4 @@
-import { Button, Card, Stack } from '@mui/joy';
+import { Box, Button, Card, Stack, Typography } from '@mui/joy';
 import { FC, useContext, useEffect, useRef, useState } from 'react';
 import ReactDice, { ReactDiceRef } from 'react-dice-complete';
 import { submitTieRoll } from '../../common/api';
@@ -8,6 +8,11 @@ const BreakTie: FC = () => {
   const appState = useContext(StateContext);
   const reactDice = useRef<ReactDiceRef>(null);
   const [disabled, setDisabled] = useState(false);
+  const involvesMe =
+    appState.kind === 'biddingTie' &&
+    appState.players.find(
+      u => u.nickname === appState.nickname && u.tieStatus.kind === 'tie',
+    );
 
   const roll = () => {
     reactDice.current?.rollAll();
@@ -39,22 +44,35 @@ const BreakTie: FC = () => {
 
   return (
     <Card sx={{ p: 5 }}>
-      <Stack spacing={3}>
-        <ReactDice
-          numDice={1}
-          ref={reactDice}
-          rollDone={rollDone}
-          rollTime={3}
-          faceColor={'#b0d2ff'}
-          dotColor={'#ffffff'}
-          outlineColor={'#97abc4'}
-          outline
-          disableIndividual
-        />
-        <Button onClick={roll} disabled={disabled}>
-          Roll
-        </Button>
-      </Stack>
+      <Typography level="h1">A bidding tie has occurred!</Typography>
+      {involvesMe ? (
+        <Stack>
+          <Box
+            sx={{
+              my: 5,
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <ReactDice
+              numDice={1}
+              ref={reactDice}
+              rollDone={rollDone}
+              rollTime={3}
+              faceColor={'#b0d2ff'}
+              dotColor={'#ffffff'}
+              outlineColor={'#97abc4'}
+              outline
+              disableIndividual
+            />
+          </Box>
+          <Button onClick={roll} disabled={disabled}>
+            Roll
+          </Button>
+        </Stack>
+      ) : (
+        <Typography>But not involving you...</Typography>
+      )}
     </Card>
   );
 };
