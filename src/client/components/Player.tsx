@@ -57,9 +57,11 @@ const Player: FC<Props> = ({ nickname }) => {
     <Box
       my={5}
       width="350px"
-      style={{
-        filter: 'drop-shadow(5px 5px 8px #DDDDDD)',
-      }}
+      style={
+        {
+          // filter: 'drop-shadow(5px 5px 8px #DDDDDD)',
+        }
+      }
     >
       <Box
         style={{
@@ -71,9 +73,11 @@ const Player: FC<Props> = ({ nickname }) => {
           justifyContent: 'center',
           borderRadius: '15px',
         }}
-        sx={{
-          boxShadow: 'xl',
-        }}
+        sx={
+          {
+            // boxShadow: 'xl',
+          }
+        }
         mx="auto"
       >
         {/* @ts-expect-error */}

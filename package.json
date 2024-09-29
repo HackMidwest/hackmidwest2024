@@ -26,6 +26,7 @@
     "jsrsasign": "^11.1.0",
     "pinata": "^1.4.1",
     "react": "^18.2.0",
+    "react-dice-complete": "^2.2.0",
     "react-dom": "^18.2.0",
     "socket.io": "^4.8.0",
     "socket.io-client": "^4.8.0",

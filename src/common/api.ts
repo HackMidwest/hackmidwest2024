@@ -44,4 +44,7 @@ export const joinLobby = (body: JoinLobbyRequest) =>
 
 export const startGame = () => post(makeUrl('/api/start'), {});
 
+export const submitTieRoll = (body: PlayerTieRollRequest) =>
+  post(makeUrl('/api/playerTieRoll'), body);
+
 export const fetchZoomJwt = () => get(makeUrl('/api/zoom-jwt'));
