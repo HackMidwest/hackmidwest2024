@@ -28,6 +28,7 @@ const Player: FC<Props> = ({ nickname }) => {
       const stream = client.getMediaStream();
       streamRef.current = stream;
       console.log(client.getAllUser());
+      stream.startAudio();
       stream.startVideo().then(() => {
         stream
           .attachVideo(
