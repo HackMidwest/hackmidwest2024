@@ -24,7 +24,7 @@ const JoinLobby: FC = () => {
     <Card sx={{ maxWidth: '600px' }}>
       <Typography level="h1">Everyone is John</Typography>
       <Typography>
-        A web-based multiplayed cooperative story-telling game where the rules
+        A web-based multiplayer cooperative story-telling game where the rules
         are simple: everyone is John. Enter a nickname to begin!
       </Typography>
       <Link href="https://rtwolf.github.io/Everyone-is-John/">
