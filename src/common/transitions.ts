@@ -67,6 +67,7 @@ export const maybeFinishPicking = (): UpdateAppState => prev => {
   return everyoneDone
     ? Promise.resolve({
         kind: 'bidding',
+        imageURL: null,
         history: [],
         players: prev.players.map(p => ({
           nickname: p.nickname,
@@ -130,6 +131,7 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
 
     return Promise.resolve({
       kind: 'biddingTie',
+      imageURL: prev.imageURL,
       history: prev.history,
       players: newPlayers,
     });
@@ -141,8 +143,11 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
     `TODO ${highestBids[0].nickname} won the contest`,
     `TODO you wake up (get this from ai model)`,
   ];
+  const generatedImageURL = '';
+  // TODO: make ai image generation call
   return Promise.resolve({
     kind: 'control',
+    imageURL: generatedImageURL,
     history: newHistory,
     controlPlayer: {
       nickname: highestBids[0].nickname,
@@ -226,8 +231,11 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
     `TODO ${winners[0].nickname} won the contest`,
     `TODO you wake up (get this from ai model)`,
   ];
+  const generatedImageURL = '';
+  // TODO: make ai image generation call
   return Promise.resolve({
     kind: 'control',
+    imageURL: generatedImageURL,
     history: newHistory,
     controlPlayer: {
       nickname: winners[0].nickname,
@@ -255,10 +263,13 @@ export const userIssuesControlInstruction =
     // TODO get a response from the ai
     // based on user data and existing history
     const result = null as unknown as InstructionResult;
+    const generatedImageURL = '';
+    // TODO: make ai image generation call
 
     if (result.result.kind === 'okayNext') {
       return Promise.resolve({
         ...prev,
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
       });
     }
@@ -267,6 +278,7 @@ export const userIssuesControlInstruction =
       // TODO give everyone another willpower on a nap
       return Promise.resolve({
         kind: 'bidding',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         players: [
           ...prev.otherPlayers.map(p => ({
@@ -295,6 +307,7 @@ export const userIssuesControlInstruction =
     ) {
       return Promise.resolve({
         kind: 'skillCheck',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         advantage: result.result.kind === 'skillCheckWithAdvantage',
         controlPlayer: {
@@ -320,6 +333,7 @@ export const userIssuesControlInstruction =
       if (playersCompletedObsessions.includes(prev.controlPlayer.nickname)) {
         return Promise.resolve({
           kind: 'bidding',
+          imageURL: generatedImageURL,
           history: [...prev.history, result.description],
           players: [
             ...newOtherPlayers.map(p => ({ ...p, bidAmount: null })),
@@ -335,6 +349,7 @@ export const userIssuesControlInstruction =
 
       return Promise.resolve({
         kind: 'control',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         otherPlayers: newOtherPlayers,
         controlPlayer: { ...prev.controlPlayer, instruction: null },
@@ -364,6 +379,7 @@ export const attemptSkillCheck =
       ];
       return Promise.resolve({
         kind: 'bidding',
+        imageURL: prev.imageURL,
         history: newHistory,
         players: [
           ...prev.otherPlayers.map(p => ({ ...p, bidAmount: null })),
