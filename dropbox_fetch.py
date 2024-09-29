@@ -2,7 +2,7 @@ import dropbox
 ACCESS_TOKEN = 'YOUR_TOKEN_HERE'
 
 def download_image_from_dropbox():
-    dropbox_path = '/esp32cam_image.jpg'
+    dropbox_path = '/photo.jpg'
     local_dir = 'static/assets/images'
 
     # Create a Dropbox client instance
