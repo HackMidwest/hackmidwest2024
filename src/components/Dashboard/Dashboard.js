@@ -8,15 +8,13 @@ import {
   Card,
   CardContent,
   Container,
-  IconButton,
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useAuth, UserButton } from '@clerk/clerk-react'; // Import UserButton from Clerk
 import { useNavigate } from 'react-router-dom';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import SummarizeIcon from '@mui/icons-material/Summarize';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import QuizIcon from '@mui/icons-material/Quiz'; // Icon for the quiz button
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -43,6 +41,11 @@ const Dashboard = () => {
   // Navigate to Mind Map Page
   const handleNavigateToMindMap = () => {
     navigate('/mindmap');
+  };
+
+  // Navigate to Quiz Page
+  const handleNavigateToQuiz = () => {
+    navigate('/quiz');
   };
 
   // Handle Summary Generation
@@ -84,90 +87,56 @@ const Dashboard = () => {
             <Card>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
-                  Upload Lecture PDFs
+                  Upload Study Materials
                 </Typography>
                 <Typography variant="body1">
-                  Upload your lecture PDFs, and let our AI generate summaries for you.
-                </Typography>
-
-                {!file ? (
-                  <Button
-                    variant="contained"
-                    component="label"
-                    color="primary"
-                    startIcon={<UploadFileIcon />}
-                    sx={{ mt: 2 }}
-                  >
-                    Upload PDF
-                    <input
-                      type="file"
-                      hidden
-                      accept="application/pdf"
-                      onChange={handleUpload}
-                    />
-                  </Button>
-                ) : (
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" gutterBottom>
-                      <IconButton>
-                        <PictureAsPdfIcon color="action" />
-                      </IconButton>
-                      {file.name}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      component="label"
-                      color="primary"
-                      startIcon={<UploadFileIcon />}
-                      sx={{ mt: 1, mr: 2 }}
-                    >
-                      Upload New PDF
-                      <input
-                        type="file"
-                        hidden
-                        accept="application/pdf"
-                        onChange={handleUpload}
-                      />
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      startIcon={<AccountTreeIcon />}
-                      onClick={handleNavigateToMindMap}
-                      sx={{ mt: 1 }}
-                    >
-                      Generate Summary Mind Map
-                    </Button>
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
-          </Box>
-
-          {/* Flashcard Generation Feature */}
-          <Box item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Generate Flashcards
-                </Typography>
-                <Typography variant="body1">
-                  Click below to generate flashcards based on the uploaded content.
+                  Upload your lecture PDFs, and let our AI generate summaries, flashcards, and mind maps for you.
                 </Typography>
                 <Button
                   variant="contained"
-                  color="secondary"
-                  startIcon={<CollectionsIcon />}
-                  onClick={handleNavigateToGenerate}
+                  component="label"
+                  color="primary"
+                  startIcon={<UploadFileIcon />}
                   sx={{ mt: 2 }}
                 >
-                  Go to Flashcards
+                  Upload PDF
+                  <input
+                    type="file"
+                    hidden
+                    accept="application/pdf"
+                    onChange={handleUpload}
+                  />
                 </Button>
               </CardContent>
             </Card>
           </Box>
 
-          {/* Summary Generation Feature
+          {/* Flashcard Generation Feature */}
+          {isSummaryAvailable && (
+            <Box item xs={12} md={6}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    Generate Flashcards
+                  </Typography>
+                  <Typography variant="body1">
+                    Click below to generate flashcards based on the uploaded content.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<CollectionsIcon />}
+                    onClick={handleNavigateToGenerate}
+                    sx={{ mt: 2 }}
+                  >
+                    Go to Flashcards
+                  </Button>
+                </CardContent>
+              </Card>
+            </Box>
+          )}
+
+          {/* Summary Generation Feature */}
           {isSummaryAvailable && (
             <Box item xs={12} md={6} sx={{ mt: 4 }}>
               <Card>
@@ -190,7 +159,57 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </Box>
-          )} */}
+          )}
+
+          {/* Mind Map Feature */}
+          {isSummaryAvailable && (
+            <Box item xs={12} md={6} sx={{ mt: 4 }}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    Generate Mind Map
+                  </Typography>
+                  <Typography variant="body1">
+                    Click below to generate a mind map based on the uploaded PDF.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SummarizeIcon />}
+                    onClick={handleNavigateToMindMap}
+                    sx={{ mt: 2 }}
+                  >
+                    Mind Map
+                  </Button>
+                </CardContent>
+              </Card>
+            </Box>
+          )}
+
+          {/* Quiz Generation Feature */}
+          {isSummaryAvailable && (
+            <Box item xs={12} md={6} sx={{ mt: 4 }}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    Take Quiz
+                  </Typography>
+                  <Typography variant="body1">
+                    Click below to take a quiz based on the uploaded content.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<QuizIcon />}
+                    onClick={handleNavigateToQuiz}
+                    sx={{ mt: 2 }}
+                  >
+                    Take Quiz
+                  </Button>
+                </CardContent>
+              </Card>
+            </Box>
+          )}
         </Box>
       </Container>
     </div>
