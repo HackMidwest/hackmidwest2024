@@ -6,14 +6,14 @@ app = Flask(__name__)
 # Ensure the 'assets' folder exists
 os.makedirs('static/assets/images', exist_ok=True)
 
-# deployed_model_name = "fraud"
-# rest_url = "http://modelmesh-serving.redhat:8008"
-# infer_url = f"{rest_url}/v2/models/{deployed_model_name}/infer"
+model_names = ["candy", "mosaic", "rain_princess", "udnie"]
+img_path = 'assets/images/esp32cam_image.jpg'
 
 @app.route('/')
 def landing_page():
     # The default image to show (the already downloaded image)
-    image_url = url_for('static', filename='assets/images/esp32cam_image.jpg')
+    image_url = url_for('static', filename=img_path)
+    dropdown_options = ''.join([f'<option value="{model}">{model}</option>' for model in model_names])
     return f"""
         <html lang="en">
             <head>
@@ -52,6 +52,13 @@ def landing_page():
                     button:hover {{
                         background-color: #e64a19;
                     }}
+                    select {{
+                        margin-top: 20px;
+                        padding: 10px;
+                        font-size: 16px;
+                        border-radius: 4px;
+                        border: 1px solid #ccc;
+                    }}
                 </style>
             </head>
             <body>
@@ -59,6 +66,12 @@ def landing_page():
                 <img id="image" src="{image_url}" alt="Downloaded Image">
                 <br>
                 <button onclick="refreshImage()">Refresh Image</button>
+                <br>
+                <!-- Dropdown for selecting a model -->
+                <label for="model-select">Choose a model:</label>
+                <select id="model-select">
+                    {dropdown_options}
+                </select>
                 <script>
                     function refreshImage() {{
                         fetch('/fetch-image')
@@ -76,53 +89,8 @@ def landing_page():
 @app.route('/fetch-image')
 def fetch_image():
     download_image_from_dropbox()
-    new_image_url = url_for('static', filename='assets/images/esp32cam_image.jpg')
+    new_image_url = url_for('static', filename=img_path)
     return jsonify(image_url=new_image_url)
-
-# @app.route('/')
-# def hello():
-#     return f"""
-#          Hello World!
-#          {predict(10)}
-#          {predict(1000)}
-#     """
-
-# def predict(price):
-#     # prediction parameter
-#     distance=200
-#     relative_price=price
-#     using_pin_number=1
-#     using_chip=1
-#     online_transaction=0
-#     data = [distance, relative_price, using_pin_number, using_chip, online_transaction]
-#     prediction = rest_request(scaler.transform([data]).tolist()[0])
-#     threshhold = 0.95
-#     fraudulent = 'fraud'
-
-#     if (prediction[0] <= threshhold):
-#         fraudulent = 'not fraud'
-
-#     return f"""
-#     <hr/>
-#     <br/>price: ${str(price)}
-#     <br/>fraudulent: {fraudulent}
-#     <br/>prediction: {str( prediction[0] )}
-#     """
-
-# def rest_request(data):
-#     json_data = {
-#         "inputs": [
-#             {
-#                 "name": "dense_input",
-#                 "shape": [1, 5],
-#                 "datatype": "FP32",
-#                 "data": data
-#             }
-#         ]
-#     }
-#     response = requests.post(infer_url, json=json_data)
-#     response_dict = response.json()
-#     return response_dict['outputs'][0]['data']
 
 if __name__ == '__main__':
     port = os.environ.get('FLASK_PORT') or 8080
