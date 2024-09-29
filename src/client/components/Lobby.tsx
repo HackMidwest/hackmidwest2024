@@ -1,26 +1,12 @@
-import { FC, useContext, useState } from 'react';
-import { StateContext } from '../State';
-import { Box, Card, Stack, Typography } from '@mui/joy';
-import { App } from '../../common/types';
-import Player from './Player';
+import { FC } from 'react';
+import { Box, Button, Stack, Typography } from '@mui/joy';
 
-type Props = {
-  lobbyState: Extract<App, { kind: 'waitingLobby' }>;
-};
-
-const Lobby: FC<Props> = ({ lobbyState }) => {
-  const appState = useContext(StateContext);
+const Lobby: FC = () => {
   return (
-    <Box>
+    <Stack spacing={5}>
       <Typography level="h1">Lobby</Typography>
-      <Stack justifyContent="space-around" flexDirection="row">
-        {lobbyState.players.map(player => (
-          <div key={player.nickname}>
-            <Player nickname={player.nickname} />
-          </div>
-        ))}
-      </Stack>
-    </Box>
+      <Button>Start Game</Button>
+    </Stack>
   );
 };
 

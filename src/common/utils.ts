@@ -1,3 +1,5 @@
+import { App } from './types';
+
 export const getTargetValue = (value: { currentTarget: { value: string } }) =>
   value.currentTarget.value;
 
@@ -45,3 +47,10 @@ export function updateElementInArray<T>(
     return element;
   });
 }
+
+export const getPlayers = (state: App) =>
+  'players' in state
+    ? state.players
+    : 'controlPlayer' in state && 'otherPlayers' in state
+      ? [state.controlPlayer, ...state.otherPlayers]
+      : [];

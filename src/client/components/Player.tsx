@@ -58,7 +58,7 @@ const Player: FC<Props> = ({ nickname }) => {
       my={5}
       width="350px"
       style={{
-        filter: 'drop-shadow(5px 5px 14px #BBBBBB)',
+        filter: 'drop-shadow(5px 5px 8px #DDDDDD)',
       }}
     >
       <Box
