@@ -6,14 +6,21 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import SimpleAppBar from '../SimpleAppBar/SimpleAppBar';
 
 const MindMap = () => {
-  const location = useLocation();
-  const { file } = location.state || {};
+  const [file, setFile] = useState(null);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Handle file upload change
+  const handleFileUpload = (event) => {
+    const uploadedFile = event.target.files[0];
+    if (uploadedFile) {
+      setFile(uploadedFile);
+    }
+  };
 
   // Handle generate mind map
   const handleGenerateMindMap = async () => {
@@ -55,8 +62,23 @@ const MindMap = () => {
             Generate Mind Map
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Our AI will generate a summarized version of the uploaded lecture PDF as a mind map.
+            Upload a lecture PDF, and our AI will generate a summarized version of the content as a mind map.
           </Typography>
+          <Button
+            variant="contained"
+            component="label"
+            color="primary"
+            startIcon={<UploadFileIcon />}
+            sx={{ mt: 2 }}
+          >
+            Upload PDF
+            <input
+              type="file"
+              hidden
+              accept="application/pdf"
+              onChange={handleFileUpload}
+            />
+          </Button>
 
           {file && (
             <Box sx={{ mt: 2 }}>

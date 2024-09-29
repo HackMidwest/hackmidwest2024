@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,14 +7,14 @@ import {
   Box,
   Card,
   CardContent,
-  Container,
-} from '@mui/material';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { useAuth, UserButton } from '@clerk/clerk-react'; // Import UserButton from Clerk
-import { useNavigate } from 'react-router-dom';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import QuizIcon from '@mui/icons-material/Quiz'; // Icon for the quiz button
+  Container
+} from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import { useAuth, UserButton } from "@clerk/clerk-react"; // Import UserButton from Clerk
+import { useNavigate } from "react-router-dom";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import SummarizeIcon from "@mui/icons-material/Summarize";
+import QuizIcon from "@mui/icons-material/Quiz"; // Icon for the quiz button
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -29,33 +29,34 @@ const Dashboard = () => {
       setFile(uploadedFile);
       setIsSummaryAvailable(true);
       // Handle file upload here (e.g., send to server for processing)
-      console.log('Uploaded file:', uploadedFile);
+      console.log("Uploaded file:", uploadedFile);
     }
   };
 
   // Navigate to Flashcards Page
+  // Navigate to Flashcards Page
   const handleNavigateToGenerate = () => {
-    navigate('/generate');
+    navigate("/flashcards");
   };
 
   // Navigate to Mind Map Page
   const handleNavigateToMindMap = () => {
-    navigate('/mindmap');
+    navigate("/mindmap");
   };
 
   // Navigate to Quiz Page
   const handleNavigateToQuiz = () => {
-    navigate('/quiz');
+    navigate("/quiz");
   };
 
   // Handle Summary Generation
   const handleGenerateSummary = () => {
     if (file) {
       // Call your backend or API to generate the summary from the uploaded PDF
-      console.log('Generating summary for:', file.name);
+      console.log("Generating summary for:", file.name);
       // Implement the actual summary generation logic here.
     } else {
-      console.error('No file available for summary generation.');
+      console.error("No file available for summary generation.");
     }
   };
 
@@ -67,15 +68,18 @@ const Dashboard = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             MindMentor
           </Typography>
-          <Button color="inherit" onClick={() => navigate('/')}>Home</Button>
-          <Button color="inherit" onClick={() => navigate('/profile')}>Profile</Button>
-          {isLoaded && (
-            isSignedIn ? (
+          <Button color="inherit" onClick={() => navigate("/")}>
+            Home
+          </Button>
+          <Button color="inherit" onClick={() => navigate("/profile")}>
+            Profile
+          </Button>
+          {isLoaded &&
+            (isSignedIn ? (
               <UserButton /> // Use Clerk's UserButton for Sign in, Sign out, and Profile
             ) : (
               <></>
-            )
-          )}
+            ))}
         </Toolbar>
       </AppBar>
 
@@ -90,7 +94,8 @@ const Dashboard = () => {
                   Upload Study Materials
                 </Typography>
                 <Typography variant="body1">
-                  Upload your lecture PDFs, and let our AI generate summaries, flashcards, and mind maps for you.
+                  Upload your lecture PDFs, and let our AI generate summaries,
+                  flashcards, and mind maps for you.
                 </Typography>
                 <Button
                   variant="contained"
@@ -120,7 +125,8 @@ const Dashboard = () => {
                     Generate Flashcards
                   </Typography>
                   <Typography variant="body1">
-                    Click below to generate flashcards based on the uploaded content.
+                    Click below to generate flashcards based on the uploaded
+                    content.
                   </Typography>
                   <Button
                     variant="contained"
@@ -170,7 +176,8 @@ const Dashboard = () => {
                     Generate Mind Map
                   </Typography>
                   <Typography variant="body1">
-                    Click below to generate a mind map based on the uploaded PDF.
+                    Click below to generate a mind map based on the uploaded
+                    PDF.
                   </Typography>
                   <Button
                     variant="contained"

@@ -8,6 +8,7 @@ import SimpleAppBar from './components/SimpleAppBar/SimpleAppBar';
 import MindMap from './components/MindMap/MindMap';
 import QnAPage from './components/QnAPage/QnAPage';
 import Quiz from './components/Quiz/Quiz';
+import Flashcards from './components/Flashcards/Flashcards';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/mindmap" element={<MindMap />} />"
         <Route path="/qnapage" element={<QnAPage />} />
         <Route path="/quiz" element={<Quiz />} />
+        <Route path="/flashcards" element={<Flashcards />} />
       </Routes>
     </Router>
   );

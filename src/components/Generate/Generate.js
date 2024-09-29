@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Button,
@@ -8,59 +6,67 @@ import {
   CardActionArea,
   CardContent,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
   Paper,
   TextField,
   Typography,
   CircularProgress,
   CssBaseline,
-  createTheme,
-  ThemeProvider,
+  Grid,
 } from "@mui/material";
-import SimpleAppBar from "../SimpleAppBar/SimpleAppBar"; 
+import { useNavigate } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export default function Generate() {
-  const { user, isLoaded } = useUser();
   const [flashcards, setFlashcards] = useState([]);
   const [flipped, setFlipped] = useState({});
   const [text, setText] = useState("");
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [darkMode] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  // Redirect to sign-in if the user is not loaded or not signed in
   useEffect(() => {
-    if (isLoaded && !user) {
+    const isUserAuthenticated = true; // Placeholder for actual authentication check
+    if (!isUserAuthenticated) {
       navigate("/sign-in");
     }
-  }, [isLoaded, user, navigate]);
+  }, [navigate]);
 
-  // Handle submit to generate flashcards
   const handleSubmit = async () => {
     setLoading(true); // Start loading
-    fetch("/api/generate", {
-      method: "POST",
-      body: text,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setFlashcards(data);
-        setLoading(false); // Stop loading
-      })
-      .catch((error) => {
-        console.error("Error generating flashcards:", error);
-        setLoading(false); // Stop loading on error
+    try {
+      const response = await fetch("http://localhost:5044/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: text }),
       });
+
+      if (!response.ok) {
+        throw new Error("Error generating flashcards");
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      const flashcardsData = data.flashcards.map((item, index) => ({
+        id: `flashcard-${index}`,
+        front: item.question,
+        back: item.answer,
+      }));
+
+      setFlashcards(flashcardsData);
+    } catch (error) {
+      console.error("Error generating flashcards:", error);
+      alert(`Error generating flashcards: ${error.message}`);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
-  // Handle flipping a flashcard
   const handleFlip = (id) => {
     setFlipped((prev) => ({
       ...prev,
@@ -68,43 +74,6 @@ export default function Generate() {
     }));
   };
 
-  // Handle opening the save dialog
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  // Handle closing the save dialog
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // Save the generated flashcards
-  // const saveFlashcards = async () => {
-  //   if (!name) {
-  //     alert("Please enter a name");
-  //     return;
-  //   }
-
-  //   if (!user || !user.id) {
-  //     alert("User is not authenticated. Please sign in first.");
-  //     return;
-  //   }
-
-  //   setLoading(true); // Start loading when saving begins
-  //   try {
-  //     // Replace this part with your logic to save flashcards using Amazon Bedrock or any other backend
-  //     await saveUserFlashcards(user.id, name, flashcards);
-  //     handleClose();
-  //     navigate("/flashcards");
-  //   } catch (error) {
-  //     console.error("Error saving flashcards:", error);
-  //     alert("Failed to save flashcards. Please try again.");
-  //   } finally {
-  //     setLoading(false); // Stop loading after the save operation is complete
-  //   }
-  // };
-
-  // Create the theme with light or dark mode based on user selection
   const theme = useMemo(() => {
     return createTheme({
       palette: {
@@ -116,17 +85,10 @@ export default function Generate() {
     });
   }, [darkMode]);
 
-  // Toggle the dark mode
-  const toggleDarkMode = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth={false} disableGutters>
-        {/* Use the SimpleAppBar component */}
-        <SimpleAppBar darkMode={darkMode} setDarkMode={toggleDarkMode} />
         <Container maxWidth="md" sx={{ mt: 4 }}>
           <Box
             sx={{
@@ -167,6 +129,12 @@ export default function Generate() {
               </Button>
             </Paper>
           </Box>
+
+          {loading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              <CircularProgress />
+            </Box>
+          )}
 
           {flashcards.length > 0 && !loading && (
             <Box sx={{ mt: 4 }}>
@@ -212,12 +180,7 @@ export default function Generate() {
                             <div>
                               <div>
                                 <Typography variant="h5" component="div">
-                                  {flashcard.front}
-                                </Typography>
-                              </div>
-                              <div>
-                                <Typography variant="h5" component="div">
-                                  {flashcard.back}
+                                  {flipped[index] ? flashcard.back : flashcard.front}
                                 </Typography>
                               </div>
                             </div>
@@ -228,56 +191,8 @@ export default function Generate() {
                   </Grid>
                 ))}
               </Grid>
-              <Box
-                sx={{
-                  mt: 4,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleOpen}
-                  sx={{
-                    py: 1.5,
-                    px: 4,
-                    fontSize: "1.1rem",
-                  }}
-                  disabled={loading} // Disable the button during loading
-                >
-                  {loading ? <CircularProgress size={24} /> : "Save"}
-                </Button>
-              </Box>
             </Box>
           )}
-
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Save Flashcards</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Please enter a name for your flashcards collection
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Collection Name"
-                type="text"
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                variant="outlined"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} disabled={loading}>
-                Cancel
-              </Button>
-              <Button disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Save"}
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Container>
       </Container>
     </ThemeProvider>
