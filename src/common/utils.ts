@@ -29,3 +29,19 @@ export const splitIntoChunks =
 
     return chunks;
   };
+
+export function updateElementInArray<T>(
+  array: T[],
+  updater: (element: T) => T,
+  predicate: (element: T) => boolean,
+): T[] {
+  return array.map(element => {
+    // Check if the current element matches the predicate
+    if (predicate(element)) {
+      // Update the element using the updater function if it matches
+      return updater(element);
+    }
+    // Return the original element if it doesn't match
+    return element;
+  });
+}
