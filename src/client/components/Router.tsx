@@ -7,6 +7,7 @@ import JoinLobby from './JoinLobby';
 import { getPlayers } from '../../common/utils';
 import Player from './Player';
 import Picking from './Picking';
+import BreakTie from './BreakTie';
 
 const Router: FC = () => {
   const appState = useContext(StateContext);
@@ -21,6 +22,7 @@ const Router: FC = () => {
           alignItems: 'center',
         }}
       >
+        <BreakTie />
         {match(appState)
           .with(
             {
