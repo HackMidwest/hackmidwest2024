@@ -6,11 +6,26 @@ import { CLIENT_ORIGIN, SERVER_PORT } from '../common/config';
 import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
 import {
+  attemptSkillCheck,
+  maybeFinishBidding,
+  maybeFinishPicking,
+  maybeFinishTieRoll,
+  playerBid,
   playerJoinLobby,
+  playerSkillObsessionSelect,
+  playerSubmitTieRoll,
   UpdateAppState,
+  userIssuesControlInstruction,
   waitingToPicking,
 } from '../common/transitions';
-import { JoinLobbyRequest } from '../common/api';
+import {
+  AttemptSkillCheckRequest,
+  IssueInstructionRequest,
+  JoinLobbyRequest,
+  KitSelectRequest,
+  PlayerBidRequest,
+  PlayerTieRollRequest,
+} from '../common/api';
 import { getJWT } from './zoom';
 import { callStableImage } from './awsImageCall';
 import { callClaudeConverse } from './awsClaudeConverse';
@@ -52,6 +67,47 @@ app.post('/api/join', async (req, res) => {
 app.post('/api/start', async (_, res) => {
   await setState(waitingToPicking());
   console.log('Starting game.');
+  res.sendStatus(200);
+});
+
+app.post('/api/selectKit', async (req, res) => {
+  const { nickname, skillOne, skillTwo, obsession } =
+    req.body as KitSelectRequest;
+  await setState(
+    playerSkillObsessionSelect(nickname, skillOne, skillTwo, obsession),
+  );
+  console.log(`kit selected: ${JSON.stringify(req.body)}`);
+  await setState(maybeFinishPicking());
+  res.sendStatus(200);
+});
+
+app.post('/api/playerBid', async (req, res) => {
+  const { nickname, bidAmt } = req.body as PlayerBidRequest;
+  await setState(playerBid(nickname, bidAmt));
+  console.log(`${nickname} bid ${bidAmt}`);
+  await setState(maybeFinishBidding());
+  res.sendStatus(200);
+});
+
+app.post('/api/playerTieRoll', async (req, res) => {
+  const { nickname, roll } = req.body as PlayerTieRollRequest;
+  await setState(playerSubmitTieRoll(nickname, roll));
+  console.log(`${nickname} rolled ${roll}`);
+  await setState(maybeFinishTieRoll());
+  res.sendStatus(200);
+});
+
+app.post('/api/issueInstruction', async (req, res) => {
+  const { instruction } = req.body as IssueInstructionRequest;
+  await setState(userIssuesControlInstruction(instruction));
+  console.log(`active Voice issued instruction: ${instruction}`);
+  res.sendStatus(200);
+});
+
+app.post('/api/attemptSkillCheck', async (req, res) => {
+  const { willpowerAdded, rollResult } = req.body as AttemptSkillCheckRequest;
+  await setState(attemptSkillCheck(willpowerAdded, rollResult));
+  console.log(`attempted skill check: ${rollResult} + ${willpowerAdded}`);
   res.sendStatus(200);
 });
 
