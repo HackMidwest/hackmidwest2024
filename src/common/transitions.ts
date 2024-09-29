@@ -264,6 +264,7 @@ export const userIssuesControlInstruction =
     }
 
     if (result.result.kind === 'fallAsleep') {
+      // TODO give everyone another willpower on a nap
       return Promise.resolve({
         kind: 'bidding',
         history: [...prev.history, result.description],
@@ -341,4 +342,33 @@ export const userIssuesControlInstruction =
     }
 
     throw 'this should never happen';
+  };
+
+export const attemptSkillCheck =
+  (willpowerAdded: number, rollResult: number): UpdateAppState =>
+  prev => {
+    if (prev.kind !== 'skillCheck') return Promise.resolve(prev);
+
+    const computedRoll = rollResult + willpowerAdded;
+    const isSuccess = prev.advantage ? computedRoll >= 3 : computedRoll >= 6;
+
+    if (isSuccess) {
+      const test = userIssuesControlInstruction(
+        `${prev.controlPlayer.nickname} succeeds the skill check`,
+      );
+      return test(prev);
+    } else {
+      const newHistory = [
+        ...prev.history,
+        `TODO ${prev.controlPlayer.nickname} failed the skill check`,
+      ];
+      return Promise.resolve({
+        kind: 'bidding',
+        history: newHistory,
+        players: [
+          ...prev.otherPlayers.map(p => ({ ...p, bidAmount: null })),
+          { ...prev.controlPlayer, bidAmount: null },
+        ],
+      });
+    }
   };

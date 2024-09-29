@@ -66,8 +66,8 @@ export type App =
         skills: { one: string; two: string };
         points: number;
         obsession: Obsession;
-        willpowerAdded: number;
-        rollResult: null | number;
+        // willpowerAdded: number;
+        // rollResult: null | number;
       };
       otherPlayers: {
         nickname: string;
