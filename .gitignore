@@ -1,2 +1,3 @@
 __pycache__
-static/
+static/assets/
+static/saved_models/

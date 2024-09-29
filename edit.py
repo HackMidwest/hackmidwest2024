@@ -77,9 +77,3 @@ def rest_request(model: str, data):
         else:
             print(f"Error in response: {response_dict}")
             return None
-
-stylize(
-    model="rain_princess", 
-    in_path="/projects/hackmidwest2024/static/assets/images/esp32cam_image.jpg",
-    out_path="/projects/hackmidwest2024/static/assets/images/edited.jpg"
-    )

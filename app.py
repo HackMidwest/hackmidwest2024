@@ -1,96 +1,47 @@
-import os, requests
-from flask import Flask, url_for, jsonify
+import os
+from flask import Flask, render_template, url_for, jsonify, request
 from dropbox_fetch import download_image_from_dropbox
+from edit import stylize
 
 app = Flask(__name__)
 # Ensure the 'assets' folder exists
 os.makedirs('static/assets/images', exist_ok=True)
 
 model_names = ["candy", "mosaic", "rain_princess", "udnie"]
-img_path = 'assets/images/esp32cam_image.jpg'
+img_path = 'assets/images/photo.jpg'
+output_image_path = 'static/assets/images/edited_photo.jpg'
 
 @app.route('/')
 def landing_page():
     # The default image to show (the already downloaded image)
     image_url = url_for('static', filename=img_path)
-    dropdown_options = ''.join([f'<option value="{model}">{model}</option>' for model in model_names])
-    return f"""
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>PixelForge: AI-Assisted Photo Editing</title>
-                <style>
-                    body {{
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        color: #333;
-                        text-align: center;
-                        margin: 0;
-                        padding: 20px;
-                    }}
-                    h1 {{
-                        color: #ff5722;
-                    }}
-                    img {{
-                        max-width: 50%;
-                        height: auto;
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                        margin-bottom: 20px;
-                        border-radius: 8px;
-                    }}
-                    button {{
-                        background-color: #ff5722;
-                        color: white;
-                        padding: 10px 20px;
-                        border: none;
-                        border-radius: 4px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease;
-                    }}
-                    button:hover {{
-                        background-color: #e64a19;
-                    }}
-                    select {{
-                        margin-top: 20px;
-                        padding: 10px;
-                        font-size: 16px;
-                        border-radius: 4px;
-                        border: 1px solid #ccc;
-                    }}
-                </style>
-            </head>
-            <body>
-                <h1>PixelForge: AI-Assisted Photo Editing on the Go!</h1>
-                <img id="image" src="{image_url}" alt="Downloaded Image">
-                <br>
-                <button onclick="refreshImage()">Refresh Image</button>
-                <br>
-                <!-- Dropdown for selecting a model -->
-                <label for="model-select">Choose a model:</label>
-                <select id="model-select">
-                    {dropdown_options}
-                </select>
-                <script>
-                    function refreshImage() {{
-                        fetch('/fetch-image')
-                            .then(response => response.json())
-                            .then(data => {{
-                                document.getElementById('image').src = data.image_url + '?v=' + new Date().getTime();
-                            }})
-                            .catch(error => console.error('Error refreshing image:', error));
-                    }}
-                </script>
-            </body>
-        </html>
-    """
+    return render_template('index.html', image_url=image_url, model_names=model_names)
 
 @app.route('/fetch-image')
 def fetch_image():
     download_image_from_dropbox()
     new_image_url = url_for('static', filename=img_path)
     return jsonify(image_url=new_image_url)
+
+@app.route('/apply-style', methods=['POST'])
+def apply_style():
+    data = request.get_json()
+    selected_model = data.get('model')
+
+    if selected_model not in model_names:
+        return jsonify({"error": "Invalid model selected"}), 400
+
+    input_image_path = os.path.join('static', img_path)
+
+    # Apply the style to the image
+    stylize(model=selected_model, in_path=input_image_path, out_path=output_image_path)
+
+    # Check if the edited image exists before returning the URL
+    if os.path.exists(output_image_path):
+        edited_image_url = url_for('static', filename='assets/images/edited_photo.jpg')
+        return jsonify(image_url=edited_image_url)
+    else:
+        return jsonify({"error": "Styled image not found"}), 404
 
 if __name__ == '__main__':
     port = os.environ.get('FLASK_PORT') or 8080

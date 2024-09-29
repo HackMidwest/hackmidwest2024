@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelForge: AI-Assisted Photo Editing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff5722;
+        }
+        img {
+            max-width: 50%;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e64a19;
+        }
+        select {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        #styled-image-container {
+            display: flex;
+            justify-content: center; /* Center the image horizontally */
+            align-items: center;     /* Center the image vertically */
+            margin-top: 20px;
+            height: 300px;           /* Fixed height for the container */
+        }
+        #styled-image {
+            display: none;           /* Hide the styled image by default */
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>PixelForge: AI-Assisted Photo Editing!</h1>
+    <img id="image" src="{{ image_url }}" alt="Downloaded Image">
+    <br>
+    <button onclick="refreshImage()">Refresh Image</button>
+    <br>
+    <!-- Dropdown for selecting a model -->
+    <label for="model-select">Choose a model:</label>
+    <select id="model-select">
+        {% for model in model_names %}
+            <option value="{{ model }}">{{ model }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <button onclick="editImage()">APPLY STYLE</button>
+    <br><br>
+    <h2>Styled Image</h2>
+    <div id="styled-image-container">
+        <img id="styled-image" src="" alt="Styled Image">
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
