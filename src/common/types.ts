@@ -7,8 +7,8 @@ export type App =
       kind: 'pickingPeriod';
       players: {
         nickname: string;
-        skills: { one: string | null; two: string | null };
-        obsession: string | null;
+        skills: null | { one: string; two: string };
+        obsession: Obsession | null;
         skillOptions: string[];
         obsessionOptions: Obsession[];
       }[];
@@ -20,7 +20,8 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        points: number;
+        obsession: Obsession;
         bidAmount: null | number;
       }[];
     }
@@ -31,7 +32,8 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        points: number;
+        obsession: Obsession;
         bidAmount: number;
         tieStatus: { kind: 'noTie' } | { kind: 'tie'; roll: null | number };
       }[];
@@ -43,14 +45,15 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
-        instruction: null | string;
+        points: number;
+        obsession: Obsession;
       };
       otherPlayers: {
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        points: number;
+        obsession: Obsession;
       }[];
     }
   | {
@@ -61,15 +64,17 @@ export type App =
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
-        willpowerAdded: number;
-        rollResult: null | number;
+        points: number;
+        obsession: Obsession;
+        // willpowerAdded: number;
+        // rollResult: null | number;
       };
       otherPlayers: {
         nickname: string;
         willpower: number;
         skills: { one: string; two: string };
-        obsession: string;
+        points: number;
+        obsession: Obsession;
       }[];
     }
   | {
