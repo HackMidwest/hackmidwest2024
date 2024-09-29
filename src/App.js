@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Generate from './components/Generate/Generate';
 import LandingPage from './components/routes/LandingPage';
 import SimpleAppBar from './components/SimpleAppBar/SimpleAppBar';
+import MindMap from './components/MindMap/MindMap';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/generate" element={<Generate />} />
         <Route path="/simpleappbar" element={<SimpleAppBar />} />
+        <Route path="/mindmap" element={<MindMap />} />"
       </Routes>
     </Router>
   );
