@@ -15,6 +15,7 @@ export type App =
     }
   | {
       kind: 'bidding';
+      imageURL: string | null;
       history: string[];
       players: {
         nickname: string;
@@ -27,6 +28,7 @@ export type App =
     }
   | {
       kind: 'biddingTie';
+      imageURL: string | null;
       history: string[];
       players: {
         nickname: string;
@@ -40,6 +42,7 @@ export type App =
     }
   | {
       kind: 'control';
+      imageURL: string | null;
       history: string[];
       controlPlayer: {
         nickname: string;
@@ -58,6 +61,7 @@ export type App =
     }
   | {
       kind: 'skillCheck';
+      imageURL: string | null;
       history: string[];
       advantage: boolean;
       controlPlayer: {
@@ -79,6 +83,7 @@ export type App =
     }
   | {
       kind: 'end';
+      imageURL: string;
     };
 
 export type InstructionResult = {

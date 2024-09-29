@@ -2,6 +2,8 @@ import { pipe } from 'effect';
 import { obsessions, skills } from './constants';
 import { App, InstructionResult, Obsession } from './types';
 import { shuffleArray, splitIntoChunks, updateElementInArray } from './utils';
+import { callClaudeConverse } from '../server/awsClaudeConverse';
+import { callStableImage } from '../server/awsImageCall';
 
 export type UpdateAppState = (prev: App) => Promise<App>;
 
@@ -67,6 +69,7 @@ export const maybeFinishPicking = (): UpdateAppState => prev => {
   return everyoneDone
     ? Promise.resolve({
         kind: 'bidding',
+        imageURL: null,
         history: [],
         players: prev.players.map(p => ({
           nickname: p.nickname,
@@ -98,7 +101,7 @@ export const playerBid =
 
 // if everyone is done bidding, move to bidding tie
 // if no tie, move to control
-export const maybeFinishBidding = (): UpdateAppState => prev => {
+export const maybeFinishBidding = (): UpdateAppState => async prev => {
   if (prev.kind !== 'bidding') return Promise.resolve(prev);
 
   const everyoneDone = prev.players.every(p => p.bidAmount !== null);
@@ -130,19 +133,38 @@ export const maybeFinishBidding = (): UpdateAppState => prev => {
 
     return Promise.resolve({
       kind: 'biddingTie',
+      imageURL: prev.imageURL,
       history: prev.history,
       players: newPlayers,
     });
   }
 
   // NOTE this is duped with maybeFinishBidding
-  const newHistory = [
+  const historyWithWinner = [
     ...prev.history,
-    `TODO ${highestBids[0].nickname} won the contest`,
-    `TODO you wake up (get this from ai model)`,
+    `CONTEST: ${highestBids[0].nickname} won the contest, and took control of John.`,
   ];
+
+  // TODO: Prompt Engineering
+  const scenario =
+    prev.history.length === 0
+      ? callClaudeConverse(
+          ['No current history, generate a scenario.'],
+          'You are the GM of everyone is John.',
+        )
+      : callClaudeConverse(
+          historyWithWinner.slice(-10),
+          'You are the GM of everyone is John. You will be given the history of the last ten events in the queue. Describe the events since the last person lost control.',
+        );
+
+  const newHistory = [...historyWithWinner, await scenario];
+
+  const generatedImageURL = await callStableImage(
+    newHistory.slice(-3).join('\n\n'),
+  );
   return Promise.resolve({
     kind: 'control',
+    imageURL: generatedImageURL,
     history: newHistory,
     controlPlayer: {
       nickname: highestBids[0].nickname,
@@ -180,7 +202,7 @@ export const playerSubmitTieRoll =
   };
 
 // if everyone is done rolling their tie dice, move to control
-export const maybeFinishTieRoll = (): UpdateAppState => prev => {
+export const maybeFinishTieRoll = (): UpdateAppState => async prev => {
   if (prev.kind !== 'biddingTie') return Promise.resolve(prev);
 
   const everyoneDone = prev.players.every(
@@ -221,13 +243,32 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
   }
 
   // NOTE this is duped with maybeFinishBidding
-  const newHistory = [
+  const historyWithWinner = [
     ...prev.history,
-    `TODO ${winners[0].nickname} won the contest`,
-    `TODO you wake up (get this from ai model)`,
+    `CONTEST: ${winners[0].nickname} won the contest, and took control of John.`,
   ];
+
+  // TODO: Prompt Engineering
+  const scenario =
+    prev.history.length === 0
+      ? callClaudeConverse(
+          ['No current history, generate a scenario.'],
+          'You are the GM of everyone is John.',
+        )
+      : callClaudeConverse(
+          historyWithWinner.slice(-10),
+          'You are the GM of everyone is John. You will be given the history of the last ten events in the queue. Describe the events since the last person lost control.',
+        );
+
+  const newHistory = [...historyWithWinner, await scenario];
+
+  const generatedImageURL = await callStableImage(
+    newHistory.slice(-3).join('\n\n'),
+  );
+
   return Promise.resolve({
     kind: 'control',
+    imageURL: generatedImageURL,
     history: newHistory,
     controlPlayer: {
       nickname: winners[0].nickname,
@@ -249,29 +290,37 @@ export const maybeFinishTieRoll = (): UpdateAppState => prev => {
 
 export const userIssuesControlInstruction =
   (instruction: string): UpdateAppState =>
-  prev => {
+  async prev => {
     if (prev.kind !== 'control') return Promise.resolve(prev);
 
-    // TODO get a response from the ai
+    const response = await callClaudeConverse(
+      [...prev.history.slice(-10), `INSTRUCTION: ${instruction}`],
+      `You are the GM of the game Everyone Is John. Given the current history and the most recent instruction create a logical continuation. Your response must be in the form of the typescript type InstructionResult = {description: string; result: | { kind: 'skillCheckWithAdvantage' } | { kind: 'skillCheck' } | { kind: 'okayNext' } | { kind: 'fallAsleep' } | { kind: 'obsessionsCompleted'; playerNicknames: string[] };};`,
+    );
+
     // based on user data and existing history
-    const result = null as unknown as InstructionResult;
+    const result = JSON.parse(response) as InstructionResult;
+    const generatedImageURL = await callStableImage(
+      `${prev.history.join('\n\n')}\n\n${result.description}`,
+    );
 
     if (result.result.kind === 'okayNext') {
       return Promise.resolve({
         ...prev,
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
       });
     }
 
     if (result.result.kind === 'fallAsleep') {
-      // TODO give everyone another willpower on a nap
       return Promise.resolve({
         kind: 'bidding',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         players: [
           ...prev.otherPlayers.map(p => ({
             nickname: p.nickname,
-            willpower: p.willpower,
+            willpower: p.willpower + 1,
             skills: p.skills,
             points: p.points,
             obsession: p.obsession,
@@ -279,7 +328,7 @@ export const userIssuesControlInstruction =
           })),
           {
             nickname: prev.controlPlayer.nickname,
-            willpower: prev.controlPlayer.willpower,
+            willpower: prev.controlPlayer.willpower + 1,
             skills: prev.controlPlayer.skills,
             points: prev.controlPlayer.points,
             obsession: prev.controlPlayer.obsession,
@@ -295,6 +344,7 @@ export const userIssuesControlInstruction =
     ) {
       return Promise.resolve({
         kind: 'skillCheck',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         advantage: result.result.kind === 'skillCheckWithAdvantage',
         controlPlayer: {
@@ -320,6 +370,7 @@ export const userIssuesControlInstruction =
       if (playersCompletedObsessions.includes(prev.controlPlayer.nickname)) {
         return Promise.resolve({
           kind: 'bidding',
+          imageURL: generatedImageURL,
           history: [...prev.history, result.description],
           players: [
             ...newOtherPlayers.map(p => ({ ...p, bidAmount: null })),
@@ -335,6 +386,7 @@ export const userIssuesControlInstruction =
 
       return Promise.resolve({
         kind: 'control',
+        imageURL: generatedImageURL,
         history: [...prev.history, result.description],
         otherPlayers: newOtherPlayers,
         controlPlayer: { ...prev.controlPlayer, instruction: null },
@@ -364,6 +416,7 @@ export const attemptSkillCheck =
       ];
       return Promise.resolve({
         kind: 'bidding',
+        imageURL: prev.imageURL,
         history: newHistory,
         players: [
           ...prev.otherPlayers.map(p => ({ ...p, bidAmount: null })),
