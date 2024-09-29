@@ -8,6 +8,7 @@ import { getPlayers } from '../../common/utils';
 import Player from './Player';
 import Picking from './Picking';
 import BreakTie from './BreakTie';
+import Bidding from './Bidding';
 
 const Router: FC = () => {
   const appState = useContext(StateContext);
@@ -42,6 +43,7 @@ const Router: FC = () => {
           .with({ kind: 'pickingPeriod' }, pickingState => (
             <Picking pickingState={pickingState} />
           ))
+          .with({ kind: 'bidding' }, () => <Bidding />)
           .with({ kind: 'biddingTie' }, () => <BreakTie />)
           .otherwise(appState => (
             <Typography level="body-md">{appState.kind}</Typography>

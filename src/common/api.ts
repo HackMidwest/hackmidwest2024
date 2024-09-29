@@ -44,6 +44,9 @@ export const joinLobby = (body: JoinLobbyRequest) =>
 
 export const startGame = () => post(makeUrl('/api/start'), {});
 
+export const submitBid = (body: PlayerBidRequest) =>
+  post(makeUrl('/api/playerBid'), body);
+
 export const submitTieRoll = (body: PlayerTieRollRequest) =>
   post(makeUrl('/api/playerTieRoll'), body);
 
