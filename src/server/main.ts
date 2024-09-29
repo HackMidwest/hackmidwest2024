@@ -8,6 +8,7 @@ import { Mutex } from 'async-mutex';
 import { playerJoinLobby, UpdateAppState } from '../common/transitions';
 import { JoinLobbyRequest } from '../common/api';
 import { getJWT } from './zoom';
+import { callStableImage } from './awsImageCall';
 
 const app = express();
 const port = SERVER_PORT;
@@ -59,3 +60,5 @@ io.on('connection', socket => {
 server.listen(port, () => {
   console.log(`App is listening on port ${port}...`);
 });
+
+callStableImage('little boy on a bridge').then(console.log);
