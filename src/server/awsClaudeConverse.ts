@@ -4,6 +4,10 @@ import {
   Message,
 } from '@aws-sdk/client-bedrock-runtime';
 
+const historyToString = (history: string[]) => {
+  return history.join('\n\n');
+};
+
 export const callClaudeConverse = async (
   history: string[],
   systemPrompt: string,
@@ -18,10 +22,12 @@ export const callClaudeConverse = async (
   });
 
   const modelId = process.env.MODEL_ID as string;
-  const conversation: Message[] = history.map(entry => ({
-    role: 'user',
-    content: [{ text: entry }],
-  }));
+  const conversation: Message[] = [
+    {
+      role: 'user',
+      content: [{ text: historyToString(history) }],
+    },
+  ];
 
   const response = await client.send(
     new ConverseCommand({
