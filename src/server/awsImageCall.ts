@@ -7,8 +7,8 @@ import { PinataSDK } from 'pinata';
 import { v4 } from 'uuid';
 
 const pinata = new PinataSDK({
-  pinataJwt: `${import.meta.env.VITE_PINATA_JWT}`,
-  pinataGateway: `${import.meta.env.VITE_GATEWAY_URL}`,
+  pinataJwt: `${process.env.PINATA_JWT}`,
+  pinataGateway: `${process.env.PINATA_GATEWAY_URL}`,
 });
 
 export const callStableImage = async (prompt: string) => {
@@ -34,8 +34,17 @@ export const callStableImage = async (prompt: string) => {
   };
 
   const response = (await client.send(new InvokeModelCommand(modelInput))).body;
+  const decodedString = new TextDecoder().decode(response);
+  const jsonObject = JSON.parse(decodedString);
+  const binaryData = atob(jsonObject.images[0]);
+  const byteNumbers = new Array(binaryData.length);
 
-  const blob = new Blob([response]);
+  for (let i = 0; i < binaryData.length; i++) {
+    byteNumbers[i] = binaryData.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray]);
   const file = new File([blob], v4());
 
   const upload = await pinata.upload.file(file);

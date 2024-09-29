@@ -8,6 +8,8 @@ import { Mutex } from 'async-mutex';
 import { playerJoinLobby, UpdateAppState } from '../common/transitions';
 import { JoinLobbyRequest } from '../common/api';
 import { getJWT } from './zoom';
+import { callStableImage } from './awsImageCall';
+import { callClaudeConverse } from './awsClaudeConverse';
 
 const app = express();
 const port = SERVER_PORT;
