@@ -1,6 +1,6 @@
 import { FC, FormEventHandler, useContext, useState } from 'react';
 import { StateContext } from '../State';
-import { Button, Card, Input, Typography } from '@mui/joy';
+import { Button, Card, Input, Link, Stack, Typography } from '@mui/joy';
 import { getTargetValue } from '../../common/utils';
 import { flow } from 'effect';
 import { joinLobby } from '../../common/api';
@@ -21,17 +21,27 @@ const JoinLobby: FC = () => {
   };
 
   return (
-    <Card>
-      <Typography level="h1">Join Lobby</Typography>
+    <Card sx={{ maxWidth: '600px' }}>
+      <Typography level="h1">Everyone is John</Typography>
+      <Typography>
+        A web-based multiplayed cooperative story-telling game where the rules
+        are simple: everyone is John. Enter a nickname to begin!
+      </Typography>
+      <Link href="https://rtwolf.github.io/Everyone-is-John/">
+        Origin and explanation.
+      </Link>
       <form onSubmit={onSubmit}>
-        <Input
-          value={nickname}
-          onChange={flow(getTargetValue, setNickname)}
-          placeholder="Nickname"
-        />
-        <Button type="submit" disabled={disabled}>
-          Join
-        </Button>
+        <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
+          <Input
+            value={nickname}
+            onChange={flow(getTargetValue, setNickname)}
+            placeholder="Nickname"
+            sx={{ my: 3, flexGrow: 1 }}
+          />
+          <Button type="submit" disabled={disabled}>
+            Enter Game
+          </Button>
+        </Stack>
       </form>
     </Card>
   );
