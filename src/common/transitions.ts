@@ -313,7 +313,6 @@ export const userIssuesControlInstruction =
     }
 
     if (result.result.kind === 'fallAsleep') {
-      // TODO give everyone another willpower on a nap
       return Promise.resolve({
         kind: 'bidding',
         imageURL: generatedImageURL,
@@ -321,7 +320,7 @@ export const userIssuesControlInstruction =
         players: [
           ...prev.otherPlayers.map(p => ({
             nickname: p.nickname,
-            willpower: p.willpower,
+            willpower: p.willpower + 1,
             skills: p.skills,
             points: p.points,
             obsession: p.obsession,
@@ -329,7 +328,7 @@ export const userIssuesControlInstruction =
           })),
           {
             nickname: prev.controlPlayer.nickname,
-            willpower: prev.controlPlayer.willpower,
+            willpower: prev.controlPlayer.willpower + 1,
             skills: prev.controlPlayer.skills,
             points: prev.controlPlayer.points,
             obsession: prev.controlPlayer.obsession,
