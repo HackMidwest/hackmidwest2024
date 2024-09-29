@@ -31,6 +31,13 @@ export type PlayerTieRollRequest = {
   nickname: string;
   roll: number;
 };
+export type IssueInstructionRequest = {
+  instruction: string;
+};
+export type AttemptSkillCheckRequest = {
+  willpowerAdded: number;
+  rollResult: number;
+};
 
 export const joinLobby = (body: JoinLobbyRequest) =>
   post(makeUrl('/api/join'), body);

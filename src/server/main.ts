@@ -6,6 +6,7 @@ import { CLIENT_ORIGIN, SERVER_PORT } from '../common/config';
 import { App } from '../common/types';
 import { Mutex } from 'async-mutex';
 import {
+  attemptSkillCheck,
   maybeFinishBidding,
   maybeFinishPicking,
   maybeFinishTieRoll,
@@ -14,9 +15,12 @@ import {
   playerSkillObsessionSelect,
   playerSubmitTieRoll,
   UpdateAppState,
+  userIssuesControlInstruction,
   waitingToPicking,
 } from '../common/transitions';
 import {
+  AttemptSkillCheckRequest,
+  IssueInstructionRequest,
   JoinLobbyRequest,
   KitSelectRequest,
   PlayerBidRequest,
@@ -90,6 +94,20 @@ app.post('/api/playerTieRoll', async (req, res) => {
   await setState(playerSubmitTieRoll(nickname, roll));
   console.log(`${nickname} rolled ${roll}`);
   await setState(maybeFinishTieRoll());
+  res.sendStatus(200);
+});
+
+app.post('/api/issueInstruction', async (req, res) => {
+  const { instruction } = req.body as IssueInstructionRequest;
+  await setState(userIssuesControlInstruction(instruction));
+  console.log(`active Voice issued instruction: ${instruction}`);
+  res.sendStatus(200);
+});
+
+app.post('/api/attemptSkillCheck', async (req, res) => {
+  const { willpowerAdded, rollResult } = req.body as AttemptSkillCheckRequest;
+  await setState(attemptSkillCheck(willpowerAdded, rollResult));
+  console.log(`attempted skill check: ${rollResult} + ${willpowerAdded}`);
   res.sendStatus(200);
 });
 
