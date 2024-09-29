@@ -6,6 +6,7 @@ import { Box, Stack, Typography } from '@mui/joy';
 import JoinLobby from './JoinLobby';
 import { getPlayers } from '../../common/utils';
 import Player from './Player';
+import Picking from './Picking';
 
 const Router: FC = () => {
   const appState = useContext(StateContext);
@@ -32,10 +33,13 @@ const Router: FC = () => {
                   ).length !== 0,
               ),
             },
-            appState => <Lobby />,
+            appState => <Lobby lobbyState={appState} />,
           )
           .with({ kind: 'waitingLobby', nickname: P.nullish }, () => (
             <JoinLobby />
+          ))
+          .with({ kind: 'pickingPeriod' }, pickingState => (
+            <Picking pickingState={pickingState} />
           ))
           .otherwise(appState => (
             <Typography level="body-md">{appState.kind}</Typography>
