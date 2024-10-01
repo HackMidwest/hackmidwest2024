@@ -23,10 +23,11 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 
 ## What is the name of your App?
+*MindMentor*
 
 <br /><br />
 ## What does your app do?
-*Describe in a paragraph or so*
+*MindMentor is a learning platform designed to help students in a hurry.*
 
 <br /><br />
 
