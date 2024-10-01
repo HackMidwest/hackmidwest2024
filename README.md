@@ -27,7 +27,7 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 <br /><br />
 ## What does your app do?
-*MindMentor is a learning platform designed to help students in a hurry.*
+*MindMentor is a learning platform designed to help students in a hurry. It helps students to generate quick summaries of lecture and reference PDFs of a particular subject, generate flashcards, quizzes, and has voice assist to help clear students' doubts.*
 
 <br /><br />
 
