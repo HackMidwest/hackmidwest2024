@@ -24,6 +24,8 @@ Ensure you have reviewed the [Rules & FAQ](https://hackmidwest.com/#faq)
 
 ## What is the name of your App?
 *MindMentor*
+![image](https://github.com/user-attachments/assets/eb441d7e-49ba-456a-b7ea-89dd40707004)
+
 
 <br /><br />
 ## What does your app do?
